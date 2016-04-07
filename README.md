@@ -10,6 +10,7 @@ The goal of the site is to have one place where a reader can easily access the d
 
 
 Major things to rebuild:
+
 -A way of indexing the reels that makes sense. In Sam's repo, he named a bunch of points within each reel including a "start" point; if a user enters a date after the one named in script.js then their browser will take them to the corresponding reel. 
 
 -A way to search that is at least as good as the current search capabilities. Currently you can pick a date, then search in the archive.org viewer and it will search within the reel you're currently looking at. 
