@@ -8,3 +8,15 @@ body{font-family:"Lato",Helvetica,sans-serif;}
 }
 .header .btn{position:relative; margin-top:30px; padding:10px 30px 10px 30px;z-index:5;}
 #time-navigation{display:none;}
+
+  div#viewer {
+    padding:0px;
+    height:calc(100vh - 69px);
+    margin-top:0px;
+    margin-left:-20px;
+    margin-bottom:-20px;
+    margin-right:-20px;
+    width:calc(100%+60px);
+    background-color:black;
+    overflow-y:hidden;
+  }
