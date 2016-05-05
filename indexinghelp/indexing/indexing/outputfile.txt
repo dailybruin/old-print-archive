@@ -1,0 +1,6 @@
+} else if (new Date(1930, 12, 5).getTime() <= selectedDate) {volume = ['08', 180];
+} else if (new Date(1930, 12, 4).getTime() <= selectedDate) {volume = ['08', 176];
+} else if (new Date(1930, 12, 3).getTime() <= selectedDate) {volume = ['08', 172];
+} else if (new Date(1930, 12, 2).getTime() <= selectedDate) {volume = ['08', 168];
+} else if (new Date(1930, 12, 1).getTime() <= selectedDate) {volume = ['08', 164];
+} else if (new Date(1930, 12, -2).getTime() <= selectedDate) {volume = ['08', 160];
