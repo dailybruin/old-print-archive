@@ -13,12 +13,12 @@ using namespace std;
 int main(int argc, const char * argv[]) {
     int page;
     int i=0;
-    int day=5; //Friday
+    int day=12; //Friday
     int count = 0;
-    for (i=180; i>=158; i-=4)
+    for (i=276; i>=240; i-=4)
     {
         page = i;
-        cout << "} else if (new Date(1930, 12, "<< day <<").getTime() <= selectedDate) {volume = ['08', " << page << "];\n";
+        cout << "} else if (new Date(1931, 12, "<< day <<").getTime() <= selectedDate) {volume = ['08', " << page << "];\n";
         day--;
         count++;
         if(count ==5) //account for weekends

@@ -1,6 +1,10 @@
-} else if (new Date(1930, 12, 5).getTime() <= selectedDate) {volume = ['08', 180];
-} else if (new Date(1930, 12, 4).getTime() <= selectedDate) {volume = ['08', 176];
-} else if (new Date(1930, 12, 3).getTime() <= selectedDate) {volume = ['08', 172];
-} else if (new Date(1930, 12, 2).getTime() <= selectedDate) {volume = ['08', 168];
-} else if (new Date(1930, 12, 1).getTime() <= selectedDate) {volume = ['08', 164];
-} else if (new Date(1930, 12, -2).getTime() <= selectedDate) {volume = ['08', 160];
+} else if (new Date(1931, 12, 12).getTime() <= selectedDate) {volume = ['08', 276];
+} else if (new Date(1931, 12, 11).getTime() <= selectedDate) {volume = ['08', 272];
+} else if (new Date(1931, 12, 10).getTime() <= selectedDate) {volume = ['08', 268];
+} else if (new Date(1931, 12, 9).getTime() <= selectedDate) {volume = ['08', 264];
+} else if (new Date(1931, 12, 8).getTime() <= selectedDate) {volume = ['08', 260];
+} else if (new Date(1931, 12, 5).getTime() <= selectedDate) {volume = ['08', 256];
+} else if (new Date(1931, 12, 4).getTime() <= selectedDate) {volume = ['08', 252];
+} else if (new Date(1931, 12, 3).getTime() <= selectedDate) {volume = ['08', 248];
+} else if (new Date(1931, 12, 2).getTime() <= selectedDate) {volume = ['08', 244];
+} else if (new Date(1931, 12, 1).getTime() <= selectedDate) {volume = ['08', 240];
