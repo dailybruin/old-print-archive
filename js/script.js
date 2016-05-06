@@ -9,7 +9,7 @@ if (new Date(2016, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAeU
 } else if (new Date(2013, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zASG9vQUdVYXBybFk';
 } else if (new Date(2012, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAVzlCTE9qMzRFZjA';
 } else if (new Date(2011, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAUjhkc2dlY05fLVU';
-} else if (new Date(2010, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAdU16d0lNOGFNYzA';
+} else if (new Date(2010, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zASmx4VXJoVDkxRXc';
 } else if (new Date(2009, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAeExhdGVfYm1FVE0';
 } else if (new Date(2008, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAdE1BNUQ3RlY1b28';
 } else if (new Date(2007, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAT2JvalFwQlZid1E';
@@ -312,8 +312,6 @@ if (new Date(2016, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAeU
 } else if (new Date(1932, 05, 4).getTime() <= selectedDate) {volume = [10, 579];
 } else if (new Date(1932, 05, 3).getTime() <= selectedDate) {volume = [10, 575];
 } else if (new Date(1932, 05, 2).getTime() <= selectedDate) {volume = [10, 571];
-
-
 } else if (new Date(1932, 04, 29).getTime() <= selectedDate) {volume = [10, 567];
 } else if (new Date(1932, 04, 28).getTime() <= selectedDate) {volume = [10, 563];
 } else if (new Date(1932, 04, 27).getTime() <= selectedDate) {volume = [10, 559];
@@ -367,7 +365,6 @@ if (new Date(2016, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAeU
 } else if (new Date(1932, 02, 16).getTime() <= selectedDate) {volume = [10, 354];
 } else if (new Date(1932, 02, 15).getTime() <= selectedDate) {volume = [10, 348];
 } else if (new Date(1932, 02, 12).getTime() <= selectedDate) {volume = [10, 338];
-
 } else if (new Date(1932, 01, 21).getTime() <= selectedDate) {volume = [10, 332];
 } else if (new Date(1932, 01, 20).getTime() <= selectedDate) {volume = [10, 328];
 } else if (new Date(1932, 01, 19).getTime() <= selectedDate) {volume = [10, 324];
@@ -1878,9 +1875,9 @@ if (new Date(2016, 01, 01).getTime() <= selectedDate) {folder = '0B9y1-prT44zAeU
 } else if (new Date(1915, 09, 10).getTime() <= selectedDate) {volume = ['01', 03];
 }
 
-
 if (new Date(2003, 01, 01).getTime() <= selectedDate) {
-document.getElementById("viewer").innerHTML='<iframe src="https://drive.google.com/embeddedfolderview?id=' + folder + '#grid" width="100%" height="100%" frameborder="0"></iframe>'
+document.getElementById("viewer").innerHTML='<iframe src="https://drive.google.com/a/media.ucla.edu/file/d/' + folder + '/preview" width="100%" height="100%" frameborder="0"></iframe>'
+console.log("hi");
 } else if (new Date(1915, 09, 10).getTime() <= selectedDate && selectedDate < new Date(1999, 11, 01).getTime()||new Date(2001, 11, 01).getTime() <= selectedDate && selectedDate < new Date(2003, 01, 01).getTime()) {
 document.getElementById("viewer").innerHTML='<iframe src="https://archive.org/stream/ucladailybruin' + volume[0] + 'losa?ui=#page/n' + volume[1] + '/mode/1up" width="100%" height="100%" frameborder="0"></iframe>'
 } else if (selectedDate <= new Date(1915, 09, 09).getTime()) {
