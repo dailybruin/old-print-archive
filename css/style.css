@@ -1,14 +1,31 @@
 body{font-family:"Lato",Helvetica,sans-serif;}
-.navbar{background-color:#333;border-color:#333;}
+.navbar{
+    /*background-color:#333;border-color:#333;*/
+    background-color:#3496E1;
+    border-color:#3496E1;
+}
+.navbar-brand{color:lightgrey !important;}
 .header{
     margin-top:50px;
-    padding:5vh 10vh 5vh 10vh;
+    padding:30vh 10vh 5vh 10vh;
     background-color:#3496E1;
     color:white;
+    height:100vh;
 }
+.header #logo, .header #divider{font-size:3em;}
+.header #logo{font-family: 'Droid Serif', serif; text-transform:uppercase;}
+.header #archive{font-size:.75em;}
 .header .btn{position:relative; margin-top:30px; padding:10px 30px 10px 30px;z-index:5;}
+.intro h1 span, .intro h4, .intro a{display:none;}
+#divider, #archive{opacity:0;display:inline-block;}
+#divider{top:-100px;position:relative}
+#start{margin:5vh;}
 #time-navigation{display:none;}
+.wrapper{margin-bottom:50px;}
+.form-control{border:1px solid white; }
 
+#search{display:none; padding:1%;}
+.page-header{margin-top:110px;}
   div#viewer {
     padding:0px;
     height:calc(100vh - 69px);
@@ -16,7 +33,15 @@ body{font-family:"Lato",Helvetica,sans-serif;}
     margin-left:-20px;
     margin-bottom:-20px;
     margin-right:-20px;
-    width:calc(100%+60px);
-    background-color:black;
+    width:calc(100%+ 60px);
+    background-color:white;
     overflow-y:hidden;
+  }
+
+  #BRcontainer{
+      top:-24px;
+      background-color:white;
+  }
+  #BRpageview{
+      background-color:white;
   }
