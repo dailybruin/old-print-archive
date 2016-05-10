@@ -6,6 +6,45 @@ from cStringIO import StringIO
 import dateutil.parser as dparser
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
+from pymongo import MongoClient
+from multiprocessing import Pool
+import datetime
+import os
+from bson.json_util import dumps
+
+#db init
+client = MongoClient()
+db = client.db_archive
+archive_collection = db.test_archive_collection
+
+class Doc:
+    def __init__(self, url, month, day, year, page):
+        self.url = url
+        self.month = month
+        self.day = day
+        self.year = year
+        self.page = page
+        self.date = datetime.datetime(year,month,day)
+    def test_format_and_upload(self):
+        print "Converting " + self.url + " ..."
+        raw_text = convert_pdf_to_txt(self.url)
+        post = {
+            "url": self.url,
+            "month": self.month,
+            "day": self.day,
+            "year": self.year,
+            "page": self.page,
+            "date": self.date,
+            "text": raw_text
+        }
+        print "Done! Now inserting to DB..."
+        archive_collection.insert_one(post)
+
+class GDrive:
+    def __init__(self):
+        self.gauth = GoogleAuth()
+        self.gauth.LocalWebserverAuth()
+        self.drive = GoogleDrive(self.gauth)
 
 def convert_pdf_to_txt(path):
     rsrcmgr = PDFResourceManager()
@@ -27,28 +66,29 @@ def convert_pdf_to_txt(path):
     retstr.close()
     return str
 
-def format_and_upload():
-    text = convert_pdf_to_txt("page1.pdf")
-    print text
-    d = dparser.parse(text[4:50],fuzzy=True).date()
-    print d
+
+def pop_test():
+    ls = os.listdir("testfiles")
+    docs = []
+    for i, f in enumerate(ls):
+        path = "testfiles/" + f
+        d = Doc(path, 1, 6, 2003, i+1)
+        docs.append(d)
+    map(lambda d: d.test_format_and_upload(), docs)
 
 def main():
-    gauth = GoogleAuth()
-    gauth.LocalWebserverAuth()
-    drive = GoogleDrive(gauth)
+    #gdrive = GDrive()
+    #pop_test()
+    res = archive_collection.find(
+        { '$text': { '$search': "auld lang syne" } },
+        { 'url': 1,'score' : { '$meta': 'textScore' }}
+    )
+    l = list(res)
+    print dumps(l)
 
-    file_list = drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
-    for file1 in file_list:
-      print 'title: %s, id: %s' % (file1['title'], file1['id'])
 
-
-
-main()
-
-#gauth = GoogleAuth()
-#gauth.LocalWebserverAuth()
-#drive = GoogleDrive(gauth)
+if __name__ == "__main__":
+    main()
 
 #for file_list in drive.ListFile():
 #  print 'Received %s files from Files.list()' % len(file_list) # <= 10
