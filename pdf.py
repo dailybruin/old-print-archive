@@ -44,7 +44,7 @@ def main():
 
     file_list = drive.ListFile({'q': "'0B9y1-prT44zATkItckZyajJwLXM' in parents and trashed=false"}).GetList()
     for file1 in file_list:
-      if( not (file1['title'] < "2004")):
+      if( not (file1['title'] < "2003")):
       #if (file1['title'] == "2003"):
         #print 'title: %s, id: %s' % (file1['title'], file1['id'])
         query = ('\'%s\' in parents and trashed=false' % file1['id'])
