@@ -132,9 +132,9 @@ def main():
     #gdrive = GDrive()
     #pop_test()
     res = archive_collection.find(
-        { '$text': { '$search': "auld lang syne" } },
+        { '$text': { '$search': "office depot" } },
         { 'url': 1,'score' : { '$meta': 'textScore' }}
-    )
+    ).sort([('score', {'$meta': 'textScore'})])
     l = list(res)
     print dumps(l)
 
