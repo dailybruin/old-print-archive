@@ -26,6 +26,8 @@ import urllib
 #db init
 user = raw_input("Username: ")
 pw = raw_input("Password: ")
+if not os.path.exists('dl'):
+    os.makedirs('dl')
 client = MongoClient('mongodb://' + user + ':' + pw + '@ds036069.mlab.com:36069/db-archive')
 db = client.get_default_database()
 archive_collection = db.test_archive_collection
@@ -128,11 +130,19 @@ class GDrive:
                                   downloadlink = file4[key]
 
                             #d = Doc(url=downloadlink, )
-                            dt = dparser.parse(date,fuzzy=True).date()
+                            try:
+                                dt = dparser.parse(date,fuzzy=True).date()
+                            except:
+                                print "Error found for: " + fileid
+                                print "DirectLink: " + directlink
+                                print "Skipping..."
+                                continue
+
                             try:
                                 pn = int(file4['title'][11:13])
                             except:
                                 pn = int(file4['title'][12:13])
+                                
                             d = Doc(directLink=directlink, downloadLink=downloadlink, thumbnail=thumbnail,date=dt,page=pn, docsFileId=fileid)
 
                             if d.downloadFile(self):
