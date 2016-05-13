@@ -74,6 +74,9 @@ class Doc:
             raw_text = convert_pdf_to_txt(self.filedir)
         except:
             print "Error parsing file:" + self.filedir
+            print "\n!!!! Error found for: " + fileid
+            print "!!!! DirectLink: " + directlink
+            print "!!!! Skipping...\n"
             raise
         post = {
             "directLink": self.directLink,
@@ -133,16 +136,22 @@ class GDrive:
                             try:
                                 dt = dparser.parse(date,fuzzy=True).date()
                             except:
-                                print "Error found for: " + fileid
-                                print "DirectLink: " + directlink
-                                print "Skipping..."
+                                print "\n!!!! Error found for: " + fileid
+                                print "!!!! DirectLink: " + directlink
+                                print "!!!! Skipping...\n"
                                 continue
 
                             try:
                                 pn = int(file4['title'][11:13])
                             except:
-                                pn = int(file4['title'][12:13])
-                                
+                                try:
+                                    pn = int(file4['title'][12:13])
+                                except:
+                                    print "\n!!!! Error found for: " + fileid
+                                    print "!!!! DirectLink: " + directlink
+                                    print "!!!! Skipping...\n"
+                                    continue
+
                             d = Doc(directLink=directlink, downloadLink=downloadlink, thumbnail=thumbnail,date=dt,page=pn, docsFileId=fileid)
 
                             if d.downloadFile(self):
