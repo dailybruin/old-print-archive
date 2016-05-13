@@ -19,8 +19,8 @@ import datetime
 import os
 from bson.json_util import dumps
 
-from multiprocessing.dummy import Process, Queue
-from threading import Thread, local
+from multiprocessing import Process, Queue
+#from threading import Thread, local
 import urllib
 
 #db init
@@ -33,8 +33,8 @@ db = client.get_default_database()
 archive_collection = db.test_archive_collection
 
 q = Queue()
-dq = Queue() #download queue
-threadLocal = local()
+#dq = Queue() #download queue
+#threadLocal = local()
 
 
 def pdfWorker():
@@ -157,7 +157,7 @@ class GDrive:
                             if d.downloadFile(self):
                                 q.put(d)
                                 print 'Queued ' + date + ' page: %s' % pn
-                                print 'Total items: %s \n' % q.qsize()
+                                #print 'Total items: %s \n' % q.qsize()
                             else:
                                 continue
 
@@ -222,7 +222,7 @@ def main():
     drive = GDrive()
 
     for i in range(num_worker_threads):
-        t = Thread(target=pdfWorker)
+        t = Process(target=pdfWorker)
         t.start()
         threads.append(t)
 
