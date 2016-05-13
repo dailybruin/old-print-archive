@@ -74,8 +74,8 @@ class Doc:
             raw_text = convert_pdf_to_txt(self.filedir)
         except:
             print "Error parsing file:" + self.filedir
-            print "\n!!!! Error found for: " + fileid
-            print "!!!! DirectLink: " + directlink
+            print "\n!!!! Error found for: " + self.docsFileId
+            print "!!!! DirectLink: " + self.directLink
             print "!!!! Skipping...\n"
             raise
         post = {
