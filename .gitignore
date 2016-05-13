@@ -1,2 +1,3 @@
 *.pdf
 /testfiles
+client_secrets.json
