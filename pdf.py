@@ -64,8 +64,15 @@ class Doc:
         else:
             print "Downloading " + self.downloadLink + " ..."
             self.filedir = "dl/" + self.docsFileId
-            f = drive.drive.CreateFile({'id': self.docsFileId})
-            f.GetContentFile(self.filedir)
+            try:
+                f = drive.drive.CreateFile({'id': self.docsFileId})
+                f.GetContentFile(self.filedir)
+            except:
+                print "!!!! Error downloading file:" + self.filedir
+                print "!!!! Error found for: " + self.docsFileId
+                print "!!!! DirectLink: " + self.directLink
+                print "!!!! Skipping...\n"
+                return False
             return True
 
 
