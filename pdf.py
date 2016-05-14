@@ -114,7 +114,7 @@ class GDrive:
         self.gauth.LoadCredentialsFile("cred.txt")
         if self.gauth.credentials is None:
             self.gauth.LocalWebserverAuth()
-        elif gauth.access_token_expired:
+        elif self.gauth.access_token_expired:
             self.gauth.Refresh()
         else:
             self.gauth.Authorize()
