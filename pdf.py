@@ -111,7 +111,15 @@ class Doc:
 class GDrive:
     def __init__(self):
         self.gauth = GoogleAuth()
-        self.gauth.LocalWebserverAuth()
+        self.gauth.LoadCredentialsFile("cred.txt")
+        if self.gauth.credentials is None:
+            self.gauth.LocalWebserverAuth()
+        elif gauth.access_token_expired:
+            self.gauth.Refresh()
+        else:
+            self.gauth.Authorize()
+        self.gauth.SaveCredentialsFile("cred.txt")
+
         self.drive = GoogleDrive(self.gauth)
 
     def iteratePdfs(self):
