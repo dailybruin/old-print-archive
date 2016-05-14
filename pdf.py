@@ -99,13 +99,15 @@ class Doc:
             "text": raw_text
         }
         print "Done! Now inserting to DB..."
-        try:
-            archive_collection.insert_one(post)
-        except:
-            print "!!!! File already indexed:" + self.filedir
-            print "!!!! Error found for: " + self.docsFileId
-            print "!!!! DirectLink: " + self.directLink
-            print "!!!! Skipping...\n"
+        archive_collection.insert_one(post)
+        #this seems to impede perf for some reason
+        #try:
+        #    archive_collection.insert_one(post)
+        #except:
+        #    print "!!!! File already indexed:" + self.filedir
+        #    print "!!!! Error found for: " + self.docsFileId
+        #    print "!!!! DirectLink: " + self.directLink
+        #    print "!!!! Skipping...\n"
         os.remove(self.filedir)
 
 class GDrive:
