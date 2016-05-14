@@ -106,7 +106,6 @@ class Doc:
             print "!!!! Error found for: " + self.docsFileId
             print "!!!! DirectLink: " + self.directLink
             print "!!!! Skipping...\n"
-            os.remove(self.filedir)
         os.remove(self.filedir)
 
 class GDrive:
