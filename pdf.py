@@ -22,6 +22,7 @@ from bson.json_util import dumps
 from multiprocessing import Process, Queue
 #from threading import Thread, local
 import urllib
+import re
 
 #db init
 user = raw_input("Username: ")
@@ -73,8 +74,8 @@ class Doc:
         try:
             raw_text = convert_pdf_to_txt(self.filedir)
         except:
-            print "Error parsing file:" + self.filedir
-            print "\n!!!! Error found for: " + self.docsFileId
+            print "!!!! Error parsing file:" + self.filedir
+            print "!!!! Error found for: " + self.docsFileId
             print "!!!! DirectLink: " + self.directLink
             print "!!!! Skipping...\n"
             raise
@@ -136,21 +137,25 @@ class GDrive:
                             try:
                                 dt = dparser.parse(date,fuzzy=True).date()
                             except:
-                                print "\n!!!! Error found for: " + fileid
+                                print "\n!!!! DATE NOT FOUND Error found for: " + fileid
                                 print "!!!! DirectLink: " + directlink
                                 print "!!!! Skipping...\n"
                                 continue
 
                             try:
-                                pn = int(file4['title'][11:13])
+                                #pn = int(file4['title'][11:13])
+                                pn = int(re.search('(?<=page)\d+', file4['title']).group(0))
                             except:
                                 try:
-                                    pn = int(file4['title'][12:13])
+                                    pn = int(re.search('(?<=pageA)\d+', file4['title']).group(0))
                                 except:
-                                    print "\n!!!! Error found for: " + fileid
-                                    print "!!!! DirectLink: " + directlink
-                                    print "!!!! Skipping...\n"
-                                    continue
+                                    try:
+                                        pn = int(re.search('(?<=pageB)\d+', file4['title']).group(0))
+                                    except:
+                                        print "\n!!!! PAGE NOT FOUND Error found for: " + fileid
+                                        print "!!!! DirectLink: " + directlink
+                                        print "!!!! DEFAULTING TO PAGE 0...\n"
+                                        pn = 0
 
                             d = Doc(directLink=directlink, downloadLink=downloadlink, thumbnail=thumbnail,date=dt,page=pn, docsFileId=fileid)
 
