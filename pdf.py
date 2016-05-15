@@ -29,7 +29,7 @@ user = raw_input("Username: ")
 pw = raw_input("Password: ")
 if not os.path.exists('dl'):
     os.makedirs('dl')
-client = MongoClient('mongodb://' + user + ':' + pw + '@ds036069.mlab.com:36069/db-archive')
+client = MongoClient('mongodb://' + user + ':' + pw + '@ds036069.mlab.com:36069/db-archive', connect=False)
 db = client.get_default_database()
 archive_collection = db.test_archive_collection
 
@@ -85,7 +85,8 @@ class Doc:
             print "!!!! Error found for: " + self.docsFileId
             print "!!!! DirectLink: " + self.directLink
             print "!!!! Skipping...\n"
-            raise
+            return
+            #raise
         post = {
             "directLink": self.directLink,
             "downloadLink": self.downloadLink,
