@@ -1,0 +1,7 @@
+*.pdf
+/testfiles
+/dl
+cred.txt
+client_secrets.json
+settings.yaml
+credentials.json
