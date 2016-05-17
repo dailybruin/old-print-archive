@@ -1,5 +1,6 @@
 from flask import Flask, render_template, send_from_directory, json, Response, jsonify
 from flask.ext.pymongo import PyMongo
+from flask.ext.cache import Cache
 from pymongo import MongoClient
 from bson import json_util
 import os
@@ -11,11 +12,15 @@ app = Flask(__name__)
 
 #Database Config
 mongo_uri = os.environ.get('MONGO_URI')
-if mongo_uri is None:
+redis_uri = os.environ.get('REDIS_URI')
+if mongo_uri is None or redis_uri is None:
     raise NotConfiguredException("Database URL not configured!")
 
 app.config['MONGO_URI'] = mongo_uri
+app.config['CACHE_REDIS_URL'] = redis_uri
+app.config['CACHE_TYPE'] = 'redis'
 mongo = PyMongo(app)
+cache = Cache(app)
 
 #Serve Static
 @app.route('/css/<path:path>')
@@ -40,6 +45,7 @@ def test():
 
 @app.route('/api/search/<searchterm>')
 @app.route('/api/search/<searchterm>/<page>')
+@cache.memoize(timeout=7200)
 def search(searchterm, page=1):
     results = mongo.db.test_archive_collection.find(
         { '$text': { '$search': searchterm } },
