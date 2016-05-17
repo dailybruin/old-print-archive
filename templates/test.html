@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <style>
+      .container {
+        margin-top: 2em;
+      }
+
+      #results {
+        margin-top: 2em;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+      }
+
+      .res-box {
+        margin-bottom: 2em;
+        justify-content: center;
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .res-thumbnail {
+        box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.56);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <form id="search-field">
+          <div class="input-group input-group-lg">
+            <span class="input-group-addon">Search</span>
+            <input type="text" class="form-control" placeholder="'John Wooden'" id="search-text"/>
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="submit">Go</button>
+            </span>
+          </div>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-md-12" id="results">
+        </div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script>
+      var $searchField = $("#search-field");
+      var $searchText = $("#search-text");
+      var $results = $("#results");
+      function ResultBox(resItem) {
+        this.id = resItem.docsFileId;
+        this.date = new Date(resItem.date.$date);
+        this.url = resItem.directLink;
+        this.page = resItem.page;
+      }
+
+      ResultBox.prototype.toEl = function() {
+        var $el = $("<div>", {class: "col-md-4 res-box"});
+        var $a = $("<a>", {href: this.url, target: "_blank" });
+        var $img = $("<img>", {
+          class: "res-thumbnail",
+          src: "https://drive.google.com/thumbnail?sz=w320&id="  + this.id
+        });
+        var $a = $a.append($img);
+        var $desc = $("<h4>" + this.date.toDateString() + " Page: " + this.page + "</h4>")
+
+        $el.append($a).append($desc);
+        return $el;
+      }
+
+
+      $searchField.submit(function(e){
+        e.preventDefault();
+        $.get("/api/search/" + $searchText.val() , function(dat) {
+          console.log(dat);
+          $results.html("");
+          dat.forEach(function(item) {
+            var rb = new ResultBox(item);
+            $results.append(rb.toEl());
+          });
+        });
+      });
+
+      $(function(){
+        if($searchText.val())
+          $searchField.trigger("submit");
+      });
+    </script>
+  </body>
+</html>
