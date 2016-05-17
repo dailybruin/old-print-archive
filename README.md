@@ -11,10 +11,15 @@ The goal of the site is to have one place where a reader can easily access the d
 
 Major things to rebuild:
 
--A way of indexing the reels that makes sense. In Sam's repo, he named a bunch of points within each reel including a "start" point; if a user enters a date after the one named in script.js then their browser will take them to the corresponding reel. 
+-A way of indexing the reels that makes sense. In Sam's repo, he named a bunch of points within each reel including a "start" point; if a user enters a date after the one named in script.js then their browser will take them to the corresponding reel.
 
--A way to search that is at least as good as the current search capabilities. Currently you can pick a date, then search in the archive.org viewer and it will search within the reel you're currently looking at. 
+-A way to search that is at least as good as the current search capabilities. Currently you can pick a date, then search in the archive.org viewer and it will search within the reel you're currently looking at.
 
 -Make the site prettier
 
--There should be an emphasis on getting folks to pay for this old copyrighted content. Maybe we could disable download unless folks pay (doesn't need to mean we implement a payment system; just link to our download site) or have a popup after 5 minutes saying that to continue you should donate to DB. 
+-There should be an emphasis on getting folks to pay for this old copyrighted content. Maybe we could disable download unless folks pay (doesn't need to mean we implement a payment system; just link to our download site) or have a popup after 5 minutes saying that to continue you should donate to DB.
+
+## Setting up the Server
+1. Preferably in a virtualenv - `pip install -r requirements.txt`
+2. Setup ENV variables.
+3. `python server.py`

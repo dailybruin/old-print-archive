@@ -241,7 +241,7 @@ def search(query):
     res = archive_collection.find(
         { '$text': { '$search': "query" } },
         { 'url': 1,'score' : { '$meta': 'textScore' }}
-    ).sort([('score', {'$meta': 'textScore'})])
+    ).sort([('score', {'$meta': 'textScore'})]).limit(20)[0:20]
     l = list(res)
     print dumps(l)
 

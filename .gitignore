@@ -5,3 +5,5 @@ cred.txt
 client_secrets.json
 settings.yaml
 credentials.json
+config.json
+.DS_Store
