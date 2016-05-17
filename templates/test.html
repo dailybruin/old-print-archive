@@ -41,6 +41,8 @@
             </span>
           </div>
         </form>
+        <nav>
+        <ul id="pagination" class="pagination-sm"></ul>
       </div>
       <div class="row">
         <div class="col-md-12" id="results">
@@ -49,13 +51,16 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.3.1/jquery.twbsPagination.js"></script>
     <script>
       var $searchField = $("#search-field");
       var $searchText = $("#search-text");
       var $results = $("#results");
+      var $pagination = $("#pagination");
+
       function ResultBox(resItem) {
         this.id = resItem.docsFileId;
-        this.date = new Date(resItem.date.$date);
+        this.date = new Date(Date.parse(resItem.date));
         this.url = resItem.directLink;
         this.page = resItem.page;
       }
@@ -74,17 +79,28 @@
         return $el;
       }
 
+      function handleResponse(dat) {
+        console.log(dat);
+        $results.html("");
+        $pagination.twbsPagination({
+          totalPages: dat.totalPages,
+          startPage: dat.page,
+          visiblePages: 10,
+          initiateStartPageClick: false,
+          onPageClick: function(event, page) {
+            $.get("/api/search/" + $searchText.val() +"/" + page, handleResponse);
+          }
+        });
+        dat.data.forEach(function(item) {
+          var rb = new ResultBox(item);
+          $results.append(rb.toEl());
+        });
+      }
 
       $searchField.submit(function(e){
         e.preventDefault();
-        $.get("/api/search/" + $searchText.val() , function(dat) {
-          console.log(dat);
-          $results.html("");
-          dat.forEach(function(item) {
-            var rb = new ResultBox(item);
-            $results.append(rb.toEl());
-          });
-        });
+        $pagination.unbind().removeData();
+        $.get("/api/search/" + $searchText.val() , handleResponse);
       });
 
       $(function(){

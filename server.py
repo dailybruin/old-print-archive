@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, json, Response
+from flask import Flask, render_template, send_from_directory, json, Response, jsonify
 from flask.ext.pymongo import PyMongo
 from pymongo import MongoClient
 from bson import json_util
@@ -40,13 +40,21 @@ def test():
 
 @app.route('/api/search/<searchterm>')
 @app.route('/api/search/<searchterm>/<page>')
-def search(searchterm, page=0):
+def search(searchterm, page=1):
     results = mongo.db.test_archive_collection.find(
         { '$text': { '$search': searchterm } },
         { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
     )
+    page = int(page) - 1
     data = sorted(list(results), key=lambda r: r[u'score'], reverse=True)[page*10:page*10 + 10]
-    return Response(json.dumps(data,default=json_util.default), mimetype='application/json')
+    res = {
+        "page": page + 1,
+        "totalPages": int(results.count()/10) + 1,
+        "totalItems": results.count(),
+        "data": data
+    }
+    return jsonify(res)
+    #return Response(json.dumps(data,default=json_util.default), mimetype='application/json')
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION') is None:
