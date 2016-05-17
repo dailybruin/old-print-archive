@@ -27,15 +27,39 @@ import re
 #db init
 user = raw_input("Username: ")
 pw = raw_input("Password: ")
+year = raw_input("Year: ")
+
 if not os.path.exists('dl'):
     os.makedirs('dl')
-client = MongoClient('mongodb://' + user + ':' + pw + '@ds036069.mlab.com:36069/db-archive', connect=False)
+
+client = MongoClient('mongodb://' + user + ':' + pw + '@45.55.184.137:27017/db-archive', connect=False)
+
+
 db = client.get_default_database()
 archive_collection = db.test_archive_collection
 
 q = Queue()
 #dq = Queue() #download queue
 #threadLocal = local()
+
+
+def yearlookup(x):
+    return {
+        '2003': '0B9y1-prT44zAMjRjNXNEYlFPelk',
+        '2004': '0B9y1-prT44zAQUV5eVRJZHhpcWM',
+        '2005': '0B9y1-prT44zANGMxU3VHTnBpek0', 
+        '2006': '0B9y1-prT44zAZW5YYkVWR1lBRVU',
+        '2007': '0B9y1-prT44zAT2JvalFwQlZid1E', 
+        '2008': '0B9y1-prT44zAdE1BNUQ3RlY1b28',
+        '2009': '0B9y1-prT44zAeExhdGVfYm1FVE0', 
+        '2010': '0B9y1-prT44zAdU16d0lNOGFNYzA',
+        '2011': '0B9y1-prT44zAUjhkc2dlY05fLVU', 
+        '2012': '0B9y1-prT44zAVzlCTE9qMzRFZjA',
+        '2013': '0B9y1-prT44zASG9vQUdVYXBybFk', 
+        '2014': '0B9y1-prT44zAQXhPRGFRTUVJVkE',
+        '2015': '0B9y1-prT44zAcVlwYlRFdGR3MWs', 
+        '2016': '0B9y1-prT44zAeUVUNDg4UFdvU3M'
+    }[x]
 
 
 def pdfWorker():
@@ -126,78 +150,77 @@ class GDrive:
         self.drive = GoogleDrive(self.gauth)
 
     def iteratePdfs(self):
-        file_list = self.drive.ListFile({'q': "'0B9y1-prT44zATkItckZyajJwLXM' in parents and trashed=false"}).GetList()
-        for file1 in file_list:
-          if( not (file1['title'] < "2003")):
-          #if (file1['title'] == "2003"):
-            #print 'title: %s, id: %s' % (file1['title'], file1['id'])
-            query = ('\'%s\' in parents and trashed=false' % file1['id'])
-            file_list2 = self.drive.ListFile({'q': query}).GetList()
-            for file2 in file_list2:
-                #print 'title2: %s, id2: %s' % (file2['title'], file2['id'])
-                query2 = ('\'%s\' in parents and trashed=false' % file2['id'])
-                file_list3 = self.drive.ListFile({'q': query2}).GetList()
-                for file3 in file_list3:
-                    #print 'title3: %s, id3: %s' % (file3['title'], file3['id'])
-                    query3 = ('\'%s\' in parents and trashed=false' % file3['id'])
-                    file_list4 = self.drive.ListFile({'q': query3}).GetList()
-                    for file4 in file_list4:
-                        if ( not (file4['title'] == ".DS_Store" or file4['title'] == "Icon\r" or file4['title'] == "Icon")):
-                            date = file4['title']
-                            date = date[0:6]
-                            fileid = file4['id']
+        yearid = yearlookup(year);
+        query = ('\'%s\' in parents and trashed=false' % yearid)
+        print year,  yearid
+        file_list = self.drive.ListFile({'q': query}).GetList()
 
-                            for key in file4.keys() :
-                               if (key == 'thumbnailLink'):
-                                  thumbnail = file4[key]
+        for file1 in file_list: #months
+            print 'title2: %s, id2: %s' % (file1['title'], file1['id'])
+            query2 = ('\'%s\' in parents and trashed=false' % file1['id'])
+            file_list3 = self.drive.ListFile({'q': query2}).GetList()
+            for file3 in file_list3:
+                print 'title3: %s, id3: %s' % (file3['title'], file3['id'])
+                query3 = ('\'%s\' in parents and trashed=false' % file3['id'])
+                file_list4 = self.drive.ListFile({'q': query3}).GetList()
+                for file4 in file_list4:
+                    if ( not (file4['title'] == ".DS_Store" or file4['title'] == "Icon\r" or file4['title'] == "Icon")):
+                        date = file4['title']
+                        date = date[0:6]
+                        fileid = file4['id']
 
-                            directlink = file4['alternateLink']
+                        for key in file4.keys() :
+                           if (key == 'thumbnailLink'):
+                              thumbnail = file4[key]
 
-                            for key in file4.keys() : #need this or else will end prematurely for some years
-                               if (key == 'webContentLink'):
-                                  downloadlink = file4[key]
+                        directlink = file4['alternateLink']
 
-                            #d = Doc(url=downloadlink, )
+                        for key in file4.keys() : #need this or else will end prematurely for some years
+                           if (key == 'webContentLink'):
+                              downloadlink = file4[key]
+
+                        #d = Doc(url=downloadlink, )
+                        
+                        try:
+                            dt = dparser.parse(date,fuzzy=True).date()
+                        except:
+                            print "\n!!!! DATE NOT FOUND Error found for: " + fileid
+                            print "!!!! DirectLink: " + directlink
+                            print "!!!! Skipping...\n"
+                            continue
+
+                        try:
+                            #pn = int(file4['title'][11:13])
+                            pn = int(re.search('(?<=page)\d+', file4['title']).group(0))
+                        except:
                             try:
-                                dt = dparser.parse(date,fuzzy=True).date()
-                            except:
-                                print "\n!!!! DATE NOT FOUND Error found for: " + fileid
-                                print "!!!! DirectLink: " + directlink
-                                print "!!!! Skipping...\n"
-                                continue
-
-                            try:
-                                #pn = int(file4['title'][11:13])
-                                pn = int(re.search('(?<=page)\d+', file4['title']).group(0))
+                                pn = int(re.search('(?<=pageA)\d+', file4['title']).group(0))
                             except:
                                 try:
-                                    pn = int(re.search('(?<=pageA)\d+', file4['title']).group(0))
+                                    pn = int(re.search('(?<=pageB)\d+', file4['title']).group(0))
                                 except:
-                                    try:
-                                        pn = int(re.search('(?<=pageB)\d+', file4['title']).group(0))
-                                    except:
-                                        print "\n!!!! PAGE NOT FOUND Error found for: " + fileid
-                                        print "!!!! DirectLink: " + directlink
-                                        print "!!!! DEFAULTING TO PAGE 0...\n"
-                                        pn = 0
+                                    print "\n!!!! PAGE NOT FOUND Error found for: " + fileid
+                                    print "!!!! DirectLink: " + directlink
+                                    print "!!!! DEFAULTING TO PAGE 0...\n"
+                                    pn = 0
 
-                            d = Doc(directLink=directlink, downloadLink=downloadlink, thumbnail=thumbnail,date=dt,page=pn, docsFileId=fileid)
+                        d = Doc(directLink=directlink, downloadLink=downloadlink, thumbnail=thumbnail,date=dt,page=pn, docsFileId=fileid)
 
-                            if d.downloadFile(self):
-                                q.put(d)
-                                print 'Queued ' + date + ' page: %s' % pn
-                                #print 'Total items: %s \n' % q.qsize()
-                            else:
-                                continue
-
-                            #print 'date: %s' % date
-                            #print 'file id: %s' % fileid
-                            #print 'thumbnail: %s' % thumbnail
-                            #print 'directlink: %s' % directlink
-                            #print 'downloadlink: %s' % downloadlink
-                            #print 'page num: %s' % (file4['title']) #note they do not always in order
-                            #print "\n"
-                            #print 'title: %s, id: %s' % (file4['title'], file4['id'])
+                        if d.downloadFile(self):
+                            q.put(d)
+                            print 'Queued ' + date + ' page: %s' % pn
+                            #print 'Total items: %s \n' % q.qsize()
+                        else:
+                            continue
+                            
+                        #print 'date: %s' % date
+                        #print 'file id: %s' % fileid
+                        #print 'thumbnail: %s' % thumbnail
+                        #print 'directlink: %s' % directlink
+                        #print 'downloadlink: %s' % downloadlink
+                        #print 'page num: %s' % (file4['title']) #note they do not always in order
+                        #print "\n"
+                        #print 'title: %s, id: %s' % (file4['title'], file4['id'])
 
 
 def convert_pdf_to_txt(path):
