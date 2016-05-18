@@ -40,7 +40,7 @@ def searchDB(searchTerm, startDate, endDate, useDate, page):
         results = mongo.db.test_archive_collection.find(
             { 'date': {'$lt': endDate, '$gte': startDate} },
             { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
-        ).sort([("date", 1),("page",1)])[page*10:page*10 + 10]
+        ).sort([("date", -1),("page",1)])[page*10:page*10 + 10]
         data = list(results)
     else:
         results = mongo.db.test_archive_collection.find(
