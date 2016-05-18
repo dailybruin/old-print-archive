@@ -1,8 +1,14 @@
-from flask import Flask, render_template, send_from_directory, json, Response, jsonify
+#DEBUG ONLY
+from __future__ import print_function
+import sys
+
+from flask import Flask, render_template, send_from_directory, json, Response, jsonify, request
 from flask.ext.pymongo import PyMongo
 from flask.ext.cache import Cache
+from datetime import datetime
 from pymongo import MongoClient
 from bson import json_util
+import time
 import os
 
 class NotConfiguredException(Exception):
@@ -19,8 +25,48 @@ if mongo_uri is None or redis_uri is None:
 app.config['MONGO_URI'] = mongo_uri
 app.config['CACHE_REDIS_URL'] = redis_uri
 app.config['CACHE_TYPE'] = 'redis'
+app.config['CACHE_DEFAULT_TIMEOUT'] = 3600
 mongo = PyMongo(app)
 cache = Cache(app)
+
+@cache.memoize(timeout=3600)
+def searchDB(searchTerm, startDate, endDate, useDate, page):
+    if useDate is 0:
+        cached_results = cache.get("searchQueryResultCache-" + searchTerm)
+        if cached_results is None:
+            results = mongo.db.test_archive_collection.find(
+                { '$text': { '$search': searchTerm } },
+                { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
+            )
+            sorted_out = sorted(list(results), key=lambda r: r[u'score'], reverse=True)
+            cache.set("searchQueryResultCache-" + searchTerm, sorted_out, 3600)
+            data = sorted_out[page*10:page*10 + 10]
+            len_items = results.count()
+        else:
+            data = cached_results[page*10:page*10 + 10]
+            len_items = len(cached_results)
+    elif not searchTerm:
+        results = mongo.db.test_archive_collection.find(
+            { 'date': {'$lt': endDate, '$gte': startDate} },
+            { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
+        ).sort([("date", -1),("page",1)])[page*10:page*10 + 10]
+        data = list(results)
+        len_items = results.count()
+    else:
+        results = mongo.db.test_archive_collection.find(
+            { '$text': { '$search': searchTerm }, 'date': {'$lt': endDate, '$gte': startDate}},
+            { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
+        ).sort([("score", {'$meta': 'textScore'})])[page*10:page*10 + 10]
+        data = list(results)
+        len_items = results.count()
+    res = {
+        "query": searchTerm,
+        "page": page + 1,
+        "totalPages": int(len_items/10) + 1,
+        "totalItems": len_items,
+        "data": data
+    }
+    return res
 
 #Serve Static
 @app.route('/css/<path:path>')
@@ -43,23 +89,23 @@ def index():
 def test():
     return render_template("test.html")
 
-@app.route('/api/search/<searchterm>')
-@app.route('/api/search/<searchterm>/<page>')
-@cache.memoize(timeout=7200)
-def search(searchterm, page=1):
-    results = mongo.db.test_archive_collection.find(
-        { '$text': { '$search': searchterm } },
-        { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
-    )
-    page = int(page) - 1
-    data = sorted(list(results), key=lambda r: r[u'score'], reverse=True)[page*10:page*10 + 10]
-    res = {
-        "page": page + 1,
-        "totalPages": int(results.count()/10) + 1,
-        "totalItems": results.count(),
-        "data": data
-    }
-    return jsonify(res)
+@app.route('/test/clearcache')
+def clearcache():
+    try:
+        cache.clear()
+    except:
+        return "Failed"
+    return "Done!"
+
+@app.route('/api/search')
+def search():
+    searchTerm = request.args.get('query', '')
+    startDate = datetime.fromtimestamp(int(request.args.get('startDate', time.time()) ))
+    endDate = datetime.fromtimestamp(int(request.args.get('endDate', time.time()) ))
+    useDate = int(request.args.get('limitDate', 0))
+    page = int(request.args.get('page', 1))-1
+
+    return jsonify(searchDB(searchTerm, startDate, endDate, useDate, page))
     #return Response(json.dumps(data,default=json_util.default), mimetype='application/json')
 
 if __name__ == '__main__':
