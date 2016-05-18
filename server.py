@@ -25,34 +25,45 @@ if mongo_uri is None or redis_uri is None:
 app.config['MONGO_URI'] = mongo_uri
 app.config['CACHE_REDIS_URL'] = redis_uri
 app.config['CACHE_TYPE'] = 'redis'
+app.config['CACHE_DEFAULT_TIMEOUT'] = 3600
 mongo = PyMongo(app)
 cache = Cache(app)
 
 @cache.memoize(timeout=3600)
 def searchDB(searchTerm, startDate, endDate, useDate, page):
     if useDate is 0:
-        results = mongo.db.test_archive_collection.find(
-            { '$text': { '$search': searchTerm } },
-            { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
-        )
-        data = sorted(list(results), key=lambda r: r[u'score'], reverse=True)[page*10:page*10 + 10]
+        cached_results = cache.get("searchQueryResultCache-" + searchTerm)
+        if cached_results is None:
+            results = mongo.db.test_archive_collection.find(
+                { '$text': { '$search': searchTerm } },
+                { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
+            )
+            sorted_out = sorted(list(results), key=lambda r: r[u'score'], reverse=True)
+            cache.set("searchQueryResultCache-" + searchTerm, sorted_out, 3600)
+            data = sorted_out[page*10:page*10 + 10]
+            len_items = results.count()
+        else:
+            data = cached_results[page*10:page*10 + 10]
+            len_items = len(cached_results)
     elif not searchTerm:
         results = mongo.db.test_archive_collection.find(
             { 'date': {'$lt': endDate, '$gte': startDate} },
             { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
         ).sort([("date", -1),("page",1)])[page*10:page*10 + 10]
         data = list(results)
+        len_items = results.count()
     else:
         results = mongo.db.test_archive_collection.find(
             { '$text': { '$search': searchTerm }, 'date': {'$lt': endDate, '$gte': startDate}},
             { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
         ).sort([("score", {'$meta': 'textScore'})])[page*10:page*10 + 10]
         data = list(results)
+        len_items = results.count()
     res = {
         "query": searchTerm,
         "page": page + 1,
-        "totalPages": int(results.count()/10) + 1,
-        "totalItems": results.count(),
+        "totalPages": int(len_items/10) + 1,
+        "totalItems": len_items,
         "data": data
     }
     return res
@@ -77,6 +88,14 @@ def index():
 @app.route('/test')
 def test():
     return render_template("test.html")
+
+@app.route('/test/clearcache')
+def clearcache():
+    try:
+        cache.clear()
+    except:
+        return "Failed"
+    return "Done!"
 
 @app.route('/api/search')
 def search():
