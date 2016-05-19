@@ -1,4 +1,4 @@
-import sys
+import os,sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -16,7 +16,6 @@ from pydrive.drive import GoogleDrive
 from pymongo import MongoClient
 from multiprocessing import Pool
 import datetime
-import os
 from bson.json_util import dumps
 
 from multiprocessing import Process, Queue
@@ -28,7 +27,7 @@ import re
 user = raw_input("Username: ")
 pw = raw_input("Password: ")
 year = raw_input("Year: ")
-
+badids = open("badids.txt", "a")
 if not os.path.exists('dl'):
     os.makedirs('dl')
 
@@ -96,6 +95,7 @@ class Doc:
                 print "!!!! Error found for: " + self.docsFileId
                 print "!!!! DirectLink: " + self.directLink
                 print "!!!! Skipping...\n"
+                badids.write("ID: " + self.docsFileId + "DirectLink: " + self.directlink + "\n\n")
                 return False
             return True
 
@@ -109,6 +109,7 @@ class Doc:
             print "!!!! Error found for: " + self.docsFileId
             print "!!!! DirectLink: " + self.directLink
             print "!!!! Skipping...\n"
+            badids.write("ID: " + self.docsFileId + "DirectLink: " + self.directlink + "\n\n")
             return
             #raise
         post = {
@@ -152,15 +153,15 @@ class GDrive:
     def iteratePdfs(self):
         yearid = yearlookup(year);
         query = ('\'%s\' in parents and trashed=false' % yearid)
-        print year,  yearid
+        #print year,  yearid
         file_list = self.drive.ListFile({'q': query}).GetList()
 
         for file1 in file_list: #months
-            print 'title2: %s, id2: %s' % (file1['title'], file1['id'])
+            #print 'title2: %s, id2: %s' % (file1['title'], file1['id'])
             query2 = ('\'%s\' in parents and trashed=false' % file1['id'])
             file_list3 = self.drive.ListFile({'q': query2}).GetList()
             for file3 in file_list3:
-                print 'title3: %s, id3: %s' % (file3['title'], file3['id'])
+                #print 'title3: %s, id3: %s' % (file3['title'], file3['id'])
                 query3 = ('\'%s\' in parents and trashed=false' % file3['id'])
                 file_list4 = self.drive.ListFile({'q': query3}).GetList()
                 for file4 in file_list4:
@@ -187,6 +188,7 @@ class GDrive:
                             print "\n!!!! DATE NOT FOUND Error found for: " + fileid
                             print "!!!! DirectLink: " + directlink
                             print "!!!! Skipping...\n"
+                            badids.write("ID: " + fileid + "DirectLink: " + directlink + "\n\n")
                             continue
 
                         try:
@@ -289,6 +291,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+    close(badids)
+
 
 #for file_list in drive.ListFile():
 #  print 'Received %s files from Files.list()' % len(file_list) # <= 10
