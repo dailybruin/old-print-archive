@@ -10,6 +10,12 @@ from pymongo import MongoClient
 from bson import json_util
 import time
 import os
+import re
+
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 class NotConfiguredException(Exception):
     pass
@@ -32,37 +38,35 @@ cache = Cache(app)
 @cache.memoize(timeout=3600)
 def searchDB(searchTerm, startDate, endDate, useDate, page):
     if useDate is 0:
-        cached_results = cache.get("searchQueryResultCache-" + searchTerm)
-        if cached_results is None:
-            results = mongo.db.test_archive_collection.find(
-                { '$text': { '$search': searchTerm } },
-                { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
-            )
-            sorted_out = sorted(list(results), key=lambda r: r[u'score'], reverse=True)
-            cache.set("searchQueryResultCache-" + searchTerm, sorted_out, 3600)
-            data = sorted_out[page*10:page*10 + 10]
-            len_items = results.count()
-        else:
-            data = cached_results[page*10:page*10 + 10]
-            len_items = len(cached_results)
+        results = mongo.db.test_archive_collection.find(
+            { '$text': { '$search': searchTerm } },
+            { '_id': 0, 'score' : { '$meta': 'textScore' }}
+        ).sort([("score", {'$meta': 'textScore'})]).limit(2000)[page*10:page*10 + 10]
     elif not searchTerm:
         results = mongo.db.test_archive_collection.find(
             { 'date': {'$lt': endDate, '$gte': startDate} },
-            { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
+            { '_id': 0, 'score' : { '$meta': 'textScore' }}
         ).sort([("date", -1),("page",1)])[page*10:page*10 + 10]
-        data = list(results)
-        len_items = results.count()
     else:
         results = mongo.db.test_archive_collection.find(
             { '$text': { '$search': searchTerm }, 'date': {'$lt': endDate, '$gte': startDate}},
-            { 'text': 0, '_id': 0, 'score' : { '$meta': 'textScore' }}
-        ).sort([("score", {'$meta': 'textScore'})])[page*10:page*10 + 10]
-        data = list(results)
-        len_items = results.count()
+            { '_id': 0, 'score' : { '$meta': 'textScore' }}
+        ).sort([("score", {'$meta': 'textScore'})]).limit(2000)[page*10:page*10 + 10]
+    data = list(results)
+    for r in data:
+        try:
+            r['text'] = re.search('[^\s]+.{,100}' + searchTerm + '.{,100}[^\s]*', r['text'], re.IGNORECASE | re.DOTALL).group(0)
+        except:
+            r['text'] = "Unable to find match"
+    len_items = results.count()
+    if len_items > 2000:
+        max_items = 2000
+    else:
+        max_items = len_items
     res = {
         "query": searchTerm,
         "page": page + 1,
-        "totalPages": int(len_items/10) + 1,
+        "totalPages": int(max_items/10) + 1,
         "totalItems": len_items,
         "data": data
     }

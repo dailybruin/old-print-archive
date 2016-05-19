@@ -57,7 +57,8 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <h5>Total Files: <span id="files"></span> </h5>
+          <h5>Total Files: <span id="files"></span></h5>
+          <h6>Showing only the first 2000 results...</h6>
           <ul id="pagination" class="pagination-sm"></ul>
         </div>
       </div>
@@ -86,6 +87,7 @@
         this.date = new Date(Date.parse(resItem.date));
         this.url = resItem.directLink;
         this.page = resItem.page;
+        this.snippet = resItem.text;
       }
 
       ResultBox.prototype.toEl = function() {
@@ -97,8 +99,8 @@
         });
         var $a = $a.append($img);
         var $desc = $("<h4>" + this.date.toDateString() + " Page: " + this.page + "</h4>")
-
-        $el.append($a).append($desc);
+        var $snippet = $("<p>").html('...' + this.snippet + '...');
+        $el.append($a).append($desc).append($snippet);
         return $el;
       }
 
