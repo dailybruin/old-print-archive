@@ -1,7 +1,3 @@
-#DEBUG ONLY
-from __future__ import print_function
-import sys
-
 from flask import Flask, render_template, send_from_directory, json, Response, jsonify, request
 from flask.ext.pymongo import PyMongo
 from flask.ext.cache import Cache
@@ -11,11 +7,6 @@ from bson import json_util
 import time
 import os
 import re
-
-try:
-   import cPickle as pickle
-except:
-   import pickle
 
 class NotConfiguredException(Exception):
     pass
@@ -46,7 +37,7 @@ def searchDB(searchTerm, startDate, endDate, useDate, page):
         results = mongo.db.test_archive_collection.find(
             { 'date': {'$lt': endDate, '$gte': startDate} },
             { '_id': 0, 'score' : { '$meta': 'textScore' }}
-        ).sort([("date", -1),("page",1)])[page*10:page*10 + 10]
+        ).sort([("date", 1),("page",1)]).limit(2000)[page*10:page*10 + 10]
     else:
         results = mongo.db.test_archive_collection.find(
             { '$text': { '$search': searchTerm }, 'date': {'$lt': endDate, '$gte': startDate}},
