@@ -1,4 +1,10 @@
 body, div { font-family:"Lato",Helvetica,sans-serif; }
+
+body {
+  width: 100%;
+  height: 100%;
+}
+
 .navbar{
     /*background-color:#333;border-color:#333;*/
     background-color:#3496E1;
@@ -24,25 +30,95 @@ body, div { font-family:"Lato",Helvetica,sans-serif; }
   background-color: transparent;
 }
 
-
+.btn-primary {
+  background-color: #3496E1;
+  border-color: #5E82A2;
+}
 
 .header{
-    padding:30vh 10vh 5vh 10vh;
     background-color:#3496E1;
     color:white;
     height:100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.header #logo, .header #divider{font-size:3em;}
+
+.header #logo, .header #divider{font-size:2em;}
 .header #logo{font-family: 'Droid Serif', serif; text-transform:uppercase;}
 .header #archive{font-size:.75em;}
 .header .btn{position:relative; margin-top:30px; padding:10px 30px 10px 30px;z-index:5;}
-.intro h1 span, .intro h4, .intro a{display:none;}
+.intro h1 span {display:none;}
+
+.intro .intro-form, .intro h4 {
+  opacity: 0;
+  transition: opacity 700ms linear;
+}
+
 #divider, #archive{opacity:0;display:inline-block;}
 #divider{top:-100px;position:relative}
 #start{margin:5vh;}
 #time-navigation{display:none;}
 .wrapper{margin-bottom:50px; display:none;}
-.form-control{border:1px solid white; }
+/*.form-control{border:1px solid white; }*/
+
+.intro-form div{
+  font-size: 1.4em;
+  font-family: 'Playfair Display', serif;
+  color: #ffffff;
+}
+
+.intro-form a{
+  font-size: 0.8em;
+  font-family: 'Playfair Display', serif;
+  color: #ffffff;
+}
+
+
+.intro-form .intro-form-label {
+  text-align: right;
+}
+
+.intro-form .intro-form-label h5 {
+  margin-top: 0;
+}
+
+.intro-form form input,
+.intro-form form input:focus{
+  border: 0;
+  border-bottom: 2px solid #ffffff;
+  border-color: #ffffff;
+  border-radius: 0;
+  background-color: transparent;
+  text-align: left;
+  box-shadow: none;
+  color: #ffffff;
+  font-size: 24px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+/*
+@media (max-width: 800px) {
+  .intro-form .intro-form-label {
+    text-align: center;
+  }
+
+  .intro-form form input,
+  .intro-form form input:focus {
+    text-align: center;
+  }
+
+}
+*/
+
+.popover {
+  margin-right: 1em;
+}
+
+#search-field .row{
+  margin-bottom: 0.5em;
+}
+
 
 #search{display:none; padding:1%;}
 .page-header{margin-top:110px;}
@@ -69,6 +145,11 @@ body, div { font-family:"Lato",Helvetica,sans-serif; }
   /*Styling for 2003 + search results*/
 .container {
     margin-top: 2em;
+}
+
+#logo-img {
+  max-height: 120%;
+  max-width: 120%;
 }
 
 #results {

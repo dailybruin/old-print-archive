@@ -1,13 +1,24 @@
 function main() {
   //init
   loadHeader();
-  var $searchBtn = $("#searchBtn");
-  var searchMenuContent = $("#searchMenu").html();
-  $searchBtn.popover({
-    html: true,
-    content: searchMenuContent
+
+  var $introFormDate = $("#intro-form-date");
+  var $introDateBtn = $("#intro-search-date");
+  var $introTextBtn = $("#intro-search-text");
+
+  $introFormDate.datepicker({
+    startDate: "09/10/1915",
+    endDate: Date(Date.now()),
+    defaultViewDate: { year: 1915, month: 09, day: 10 }
   });
 
+  $introDateBtn.click(function(){
+    
+  });
+
+  $introDateBtn.click(function(){
+
+  });
 }
 
 function loadHeader() {
@@ -23,8 +34,8 @@ function loadHeader() {
                       opacity:1,
                       top:-5
                   },900,function(){
-                      $('.intro a').fadeIn();
-                      $('.intro h4').fadeIn();
+                      $('.intro .intro-form').css('opacity',1);
+                      $('.intro h4').css('opacity',1);
                   });
               },500);
           });
