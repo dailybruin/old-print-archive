@@ -80,17 +80,9 @@ def send_images(path):
 def index():
     return render_template("index.html")
 
-@app.route('/test')
-def test():
-    return render_template("test.html")
-
-@app.route('/test/clearcache')
-def clearcache():
-    try:
-        cache.clear()
-    except:
-        return "Failed"
-    return "Done!"
+@app.route('/search')
+def searchPage():
+    return render_template("search.html")
 
 @app.route('/api/search')
 def search():
@@ -102,6 +94,19 @@ def search():
 
     return jsonify(searchDB(searchTerm, startDate, endDate, useDate, page))
     #return Response(json.dumps(data,default=json_util.default), mimetype='application/json')
+
+if os.environ.get('PRODUCTION') is None:
+    @app.route('/test')
+    def test():
+        return render_template("test.html")
+
+    @app.route('/test/clearcache')
+    def clearcache():
+        try:
+            cache.clear()
+        except:
+            return "Failed"
+        return "Done!"
 
 if __name__ == '__main__':
     if os.environ.get('PRODUCTION') is None:
