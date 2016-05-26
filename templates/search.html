@@ -15,8 +15,8 @@
 
     <link href="../css/timeline.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
-
-</head>
+    <link href="../css/search.css" rel="stylesheet">
+ </head>
     <nav class="navbar navbar-default navbar-fixed-top">
       <!-- Brand and toggle get grouped for better mobile display -->
       <div class="navbar-header pull-left">
@@ -52,13 +52,43 @@
         <button type="button" class="btn btn-link navbar-btn">Print Archive</button>
       </div>
     </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 col-sm-4 hidden-xs" id="thumbnail">
+                <div class="row toggle">
+                    <div class="col-md-2 col-md-offset-10 glyphicon glyphicon-remove"></div>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-8 col-xs-12" id="viewer"></div>
+        </div>
 
+    </div>
     <script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.3.1/jquery.twbsPagination.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.js"></script>
-    <script type="text/javascript" src="../js/WebArchive.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+    <script>
+        (function(){
+            var $thumb=$('#thumbnail');
+            var counter=0;
+            $thumb.find('.glyphicon').on('click',function(){
+                if((counter % 2) == 0 ){
+                    $thumb.switchClass('col-md-4 col-sm-4','col-md-1',500);
+                    $('#viewer').switchClass('col-md-8 col-sm-8','col-md-11 col-sm-11',500);
+                    $thumb.find('.glyphicon').switchClass('glyphicon-remove col-md-offset-10','glyphicon-arrow-right col-md-offset-6',500);
+                }
+                else{
+                    $thumb.switchClass('col-md-1','col-md-4 col-sm-4',500);
+                    $('#viewer').switchClass('col-md-11 col-sm-11','col-md-8 col-sm-8',500);
+                    $thumb.find('.glyphicon').switchClass('glyphicon-arrow-right col-md-offset-6','glyphicon-remove col-md-offset-10',500);
+                }
+                counter++;
+            });
+        })();
+    </script>
+<script type="text/javascript" src="../js/WebArchive.js"></script>
     <script type="text/javascript" src="../js/Nav.js"></script>
 </body>
 </html>
