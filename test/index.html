@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://facebook.github.io/react/js/jsfiddle-integration-babel.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.16/browser.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+</head>
+<body>
+<div id="container">
+    <!-- This element's contents will be replaced with your component. -->
+</div>
+
+<script type="text/babel">
+
+var ProductRow = React.createClass({
+  render: function() {
+    var name = this.props.product.name;
+    return (
+      <tr>
+        <td>{name}</td>
+        <td>{this.props.product.price}</td>
+      </tr>
+    );
+  }
+});
+
+var ProductTable = React.createClass({
+  render: function() {
+    var rows = [];
+    var lastCategory = null;
+    this.props.products.forEach(function(product) {
+      rows.push(<ProductRow product={product} key={product.name} />);
+      lastCategory = product.category;
+    });
+    return (
+      <table>
+        <tbody>{rows}</tbody>
+      </table>
+    );
+  }
+});
+
+var FilterableProductTable = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <ProductTable products={this.props.products} />
+      </div>
+    );
+  }
+});
+
+
+var PRODUCTS2 = [
+	{"date":"Mon, 06 Jan 2003 00:00:00 GMT","day":6,"directLink":"https://drive.google.com/file/d/0B9y1-prT44zAMFRNNFl5MEtwc1k/view?usp=drivesdk","docsFileId":"0B9y1-prT44zAMFRNNFl5MEtwc1k","downloadLink":"https://docs.google.com/uc?id=0B9y1-prT44zAMFRNNFl5MEtwc1k&export=download","month":1,"page":1,"score":0,"text":"T H E   U N I V E R S I T Y   O F   C A L I F O R N I A ,   L O S   A N G E L E S\n\nServing the UCLA community since 1919\n\nMONDAY, JANUARY 6, 2003\n\nwww.dailybruin.ucla.edu\n\nOn-campus\nresidents\nrelieved\n","thumbnail":"https://lh3.googleusercontent.com/dthl2utwS3bIi0fHQ9SOgn6rYqPs1nyvkVTDhc6HvsbipAOPBTNhYYL7IG34X7QCZO3NJQ=s220","year":2003},
+	{"date":"Mon, 06 Jan 2003 00:00:00 GMT","day":6,"directLink":"https://drive.google.com/file/d/0B9y1-prT44zAejBQbEYtQWM1ekE/view?usp=drivesdk","docsFileId":"0B9y1-prT44zAejBQbEYtQWM1ekE","downloadLink":"https://docs.google.com/uc?id=0B9y1-prT44zAejBQbEYtQWM1ekE&export=download","month":1,"page":2,"score":0,"text":"22 TTHHEE  DDAAIILLYY  BBRRUUIINN MONDAY, JANUARY 6, 2003\nWHATS BREWIN\n\nToday\n\nSAA\nDinners for 12 Strangers\nApplications are available\nwww.uclalumni.net/d12\n310-825-2252\nKerri Kraft\nFree\nDinners for 12 Strangers.","thumbnail":"https://lh4.googleusercontent.com/_cScKb5Orjjx_x1m5Kp3eLf3jP4xwUrspXyKZBPEOMZ4SxnMmA7qb4lbOlqtvGlE_TyBBg=s220","year":2003},
+	{"date":"Mon, 06 Jan 2003 00:00:00 GMT","day":6,"directLink":"https://drive.google.com/file/d/0B9y1-prT44zAQ0J5cVVwaTRuTlE/view?usp=drivesdk","docsFileId":"0B9y1-prT44zAQ0J5cVVwaTRuTlE","downloadLink":"https://docs.google.com/uc?id=0B9y1-prT44zAQ0J5cVVwaTRuTlE&export=download","month":1,"page":3,"score":0,"text":"Rulings further Enron suit\n\nNNEEWWSS\n\n33\nState to receive less Colorado water\n\nMONDAY, JANUARY 6, 2003   TTHHEE  DDAAIILLYY  BBRRUUIINN\n\nBByy  AAnnddrreeww  EEddwwaarrddss\nD A I LY B R U I N S TA F F\n\na e d w","thumbnail":"https://lh4.googleusercontent.com/UjCX73dGlFo-0THb2fc4h--l8wLZPEIVRB6Vm_TvybmICeOWxqOVhkKjA9Iq-VkgB3_MGw=s220","year":2003}
+];
+
+
+var PRODUCTS = [
+  {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+  {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+  {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
+  {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
+  {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
+  {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
+];
+ 
+ReactDOM.render(
+  <FilterableProductTable products={PRODUCTS2} />,
+  document.getElementById('container')
+);
+</script>
+</body>
+</html>
