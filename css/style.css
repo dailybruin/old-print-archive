@@ -97,19 +97,6 @@ body {
   font-family: 'Playfair Display', serif;
   font-style: italic;
 }
-/*
-@media (max-width: 800px) {
-  .intro-form .intro-form-label {
-    text-align: center;
-  }
-
-  .intro-form form input,
-  .intro-form form input:focus {
-    text-align: center;
-  }
-
-}
-*/
 
 .popover {
   margin-right: 1em;
@@ -122,17 +109,7 @@ body {
 
 #search{display:none; padding:1%;}
 .page-header{margin-top:110px;}
-  div#viewer {
-    padding:0px;
-    height:calc(100vh - 69px);
-    margin-top:0px;
-    margin-left:-20px;
-    margin-bottom:-20px;
-    margin-right:-20px;
-    width:calc(100%+ 60px);
-    background-color:white;
-    overflow-y:hidden;
-  }
+
 
   #BRcontainer{
       top:-24px;
