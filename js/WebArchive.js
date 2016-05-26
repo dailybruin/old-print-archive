@@ -10,6 +10,11 @@
     var volume = ['01', 3]
     var volume2 = [0, 0]
 
+    console.log(d);
+    console.log(d.getTime());
+    console.log(new Date(1915, 10, 09));
+    console.log(new Date(1915, 10, 09).getTime());
+
     if(!d || !d.getTime) {
       throw "Invalid Parameter";
     } else if (d.getTime() <= new Date(1915, 09, 09).getTime()) {
@@ -18,7 +23,8 @@
 
     var selectedDate = d.getTime();
 
-    if (new Date(2002, 10, 21).getTime() <= selectedDate) { volume = [199, 06];
+    if(new Date(2003, 01, 01).getTime() <= selectedDate ) { return null;
+    } else if (new Date(2002, 10, 21).getTime() <= selectedDate) { volume = [199, 06];
     } else if (new Date(2002, 10, 10).getTime() <= selectedDate) {volume = [198, 414];
     } else if (new Date(2002, 09, 12).getTime() <= selectedDate) {volume = [198, 06];
     } else if (new Date(2002, 06, 11).getTime() <= selectedDate) {volume = [197, 06];

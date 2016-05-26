@@ -176,3 +176,18 @@ body {
     height:calc(100vh - 69px);
     overflow-y:scroll;
 }
+
+
+/* Progress Bar */
+#nprogress .bar {
+  background: #ffffff;
+}
+
+#nprogress .spinner {
+  top: 60px;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #3496E1;
+  border-left-color: #3496E1;
+}

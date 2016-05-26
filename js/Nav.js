@@ -1,9 +1,24 @@
 function bindSearchFormHandlers() {
+  var $searchEndDate = $("#search-end-date");
+  var $searchStartDate = $("#search-start-date");
+  var $searchText = $("#search-text");
+
+  $searchStartDate.datepicker({
+    startDate: "09/10/1915",
+    endDate: Date(Date.now()),
+    defaultViewDate: { year: 1915, month: 09, day: 10 }
+  });
+
+  $searchEndDate.datepicker({
+    startDate: "09/10/1915",
+    endDate: Date(Date.now())
+  });
+
   $("#search-field").submit(function(e){
     e.preventDefault();
-    console.log("dsfdssdf");
-    //navigate to search page,
-    //if on search page, change/update the results
+    if(NProgress)
+      NProgress.done();
+    doSearch($searchText.val(), $searchStartDate.datepicker('getDate'), $searchEndDate.datepicker('getDate'));
   });
 };
 

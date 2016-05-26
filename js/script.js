@@ -3,6 +3,7 @@ function main() {
   loadHeader();
 
   var $introFormDate = $("#intro-form-date");
+  var $introFormText = $("#intro-form-text");
   var $introDateBtn = $("#intro-search-date");
   var $introTextBtn = $("#intro-search-text");
 
@@ -13,12 +14,13 @@ function main() {
   });
 
   $introDateBtn.click(function(){
-    
+    doSearch("",$introFormDate.datepicker('getDate'));
   });
 
-  $introDateBtn.click(function(){
-
+  $introTextBtn.click(function(){
+    doSearch($introFormText.val());
   });
+
 }
 
 function loadHeader() {
