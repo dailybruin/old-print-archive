@@ -1,0 +1,77 @@
+html,
+body {
+  height: 100%;
+  overflow:hidden ;
+}
+.wrap {
+  height: 100vh;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+main {
+  -webkit-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+}
+@media (max-width: 800px) {
+  main {
+    -webkit-box-orient: vertical;
+    -o-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+aside,
+article {
+  overflow-y: scroll;
+  padding: 2em;
+}
+
+#first-results{
+  /*-webkit-box-flex: 1;
+  justify-content: space-around;
+  padding: 35px;*/
+    -webkit-flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+aside {
+  -webkit-box-flex: 1;
+  -o-box-flex: 1;
+  box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  background: #FFCA2D;
+}
+article {
+  -webkit-box-flex: 2.5;
+  -o-box-flex: 2.5;
+  box-flex: 2.5;
+  -webkit-flex: 2.5;
+  -ms-flex: 2.5;
+  flex: 2.5;
+  background: #f0eeee;
+}
+
+iframe {
+  height:100%;
+  width: 65%;
+  frameborder: 0;
+  position:absolute;
+  z-index:1;
+  background: 
+}
+
