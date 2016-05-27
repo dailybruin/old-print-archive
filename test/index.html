@@ -21,7 +21,7 @@ var ProductRow = React.createClass({
     return (
       <tr>
         <td>{name}</td>
-        <td>{this.props.product.price}</td>
+        <td><img src="{this.props.product.price}"/></td>
       </tr>
     );
   }
@@ -62,8 +62,8 @@ var PRODUCTS2 = [
 
 
 var PRODUCTS = [
-  {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
-  {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
+  {category: 'Sporting Goods', price: 'https://docs.google.com/uc?id=0B9y1-prT44zAMFRNNFl5MEtwc1k&export=download', stocked: true, name: 'Football'},
+  {category: 'Sporting Goods', price: 'https://docs.google.com/uc?id=0B9y1-prT44zAejBQbEYtQWM1ekE&export=download', stocked: true, name: 'Baseball'},
   {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
   {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
   {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
@@ -71,7 +71,7 @@ var PRODUCTS = [
 ];
  
 ReactDOM.render(
-  <FilterableProductTable products={PRODUCTS2} />,
+  <FilterableProductTable products={PRODUCTS} />,
   document.getElementById('container')
 );
 </script>
