@@ -6,17 +6,27 @@ function bindSearchFormHandlers() {
   $searchStartDate.datepicker({
     startDate: "09/10/1915",
     endDate: Date(Date.now()),
-    defaultViewDate: { year: 1915, month: 09, day: 10 }
+    defaultViewDate: { year: 1915, month: 08, day: 10 }
+  }).on('changeDate',function(e){
+    if(WebArchive.getArchiveSrcFromDate(e.date)) {
+      $searchEndDate.attr("disabled", true);
+      $searchText.attr("disabled", true);
+    } else {
+      $searchEndDate.attr("disabled", false);
+      $searchText.attr("disabled", false);
+    }
   });
 
+
+
   $searchEndDate.datepicker({
-    startDate: "09/10/1915",
+    startDate: "09/09/1915",
     endDate: Date(Date.now())
   });
 
   $("#search-field").submit(function(e){
     e.preventDefault();
-    if(NProgress)
+    if(window.NProgress)
       NProgress.done();
     doSearch($searchText.val(), $searchStartDate.datepicker('getDate'), $searchEndDate.datepicker('getDate'));
   });

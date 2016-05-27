@@ -87,10 +87,10 @@ def searchPage():
 @app.route('/api/search')
 def search():
     searchTerm = request.args.get('query', '')
-    startDate = datetime.fromtimestamp(int(request.args.get('startDate', time.time()) ))
-    endDate = datetime.fromtimestamp(int(request.args.get('endDate', time.time()) ))
     useDate = int(request.args.get('limitDate', 0))
     page = int(request.args.get('page', 1))-1
+    startDate = datetime.fromtimestamp(int(request.args.get('startDate', time.time()) ))   
+    endDate = datetime.fromtimestamp(int(request.args.get('endDate', time.time()) ))
 
     return jsonify(searchDB(searchTerm, startDate, endDate, useDate, page))
     #return Response(json.dumps(data,default=json_util.default), mimetype='application/json')

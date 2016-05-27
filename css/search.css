@@ -13,6 +13,9 @@ div#viewer {
     margin-top:50px;
     margin-bottom:-20px;
     width:calc(100%+ 60px);
-    background-color:white;
     overflow-y:hidden;
+}
+
+body {
+  background: #eeeeee;
 }
